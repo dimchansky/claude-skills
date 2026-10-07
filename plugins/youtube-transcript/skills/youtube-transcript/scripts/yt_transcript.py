@@ -653,8 +653,9 @@ def cmd_finalize(args: argparse.Namespace) -> dict:
     changes_path = workdir / "changes.md"
     changes_path.write_text("# Editor changes (raw → edited, ignoring case and punctuation)\n\n"
                             + "\n\n".join(changes_md) + "\n")
+    raw_words = len(norm_words(" ".join(s.get("text", "") for s in data["segments"])))  # same counting as edited
     return {"transcript": str(out), "raw_transcript": str(workdir / "transcript.raw.md"),
-            "changes": str(changes_path), "raw_words": len(data["segments"]), "edited_words": edited_words,
+            "changes": str(changes_path), "raw_words": raw_words, "edited_words": edited_words,
             "chunks": stats, "warnings": warnings}
 
 

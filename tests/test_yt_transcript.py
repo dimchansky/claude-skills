@@ -218,6 +218,13 @@ class PipelineTests(unittest.TestCase):
         self.assertIn("- w0x1 → zz0x1", (self.workdir / "changes.md").read_text())
         self.assertEqual(result["edited_words"], 300)
 
+    def test_raw_and_edited_word_counts_use_the_same_tokenizer(self):
+        segments = json.loads((self.workdir / "raw.json").read_text())["segments"]
+        segments[0]["text"] = "MCP-сервер"  # one recognizer segment, two words for the QA tokenizer
+        (self.workdir / "raw.json").write_text(json.dumps({"modelId": "parakeetTDT06", "segments": segments}))
+        self.edit_all(lambda text: text)
+        self.assertEqual(self.finalize()["raw_words"], 301)
+
     def test_shortened_chunk_is_flagged(self):
         self.edit_all(lambda text: text[: len(text) // 2])
         warnings = " ".join(self.finalize()["warnings"])

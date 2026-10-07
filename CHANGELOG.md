@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## youtube-transcript
 
+### [1.0.2] - 2026-10-07
+
+#### Fixed
+
+- `finalize` counted `raw_words` as recognizer segments but `edited_words` as normalized words, so a hyphenated term like "MCP-сервер" counted once in one and twice in the other. Edited text could then look longer than the raw text. Both counts now use the same tokenizer.
+
 ### [1.0.1] - 2026-10-07
 
 #### Changed

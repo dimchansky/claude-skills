@@ -1,7 +1,7 @@
 {
   "name": "youtube-transcript",
   "displayName": "YouTube Transcript",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Clean, proofread Markdown transcripts of YouTube videos and local audio/video files: yt-dlp download, local Parakeet speech recognition in Spokenly, parallel Claude editing with QA checks. macOS only.",
   "author": {
     "name": "Dmitrij Koniajev",
