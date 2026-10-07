@@ -1,0 +1,13 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+.venv/
+
+# Never commit pipeline output or media from real videos (copyright).
+youtube-transcripts/
+*.flac
+*.webm
+*.m4a
+*.mp3
+*.mp4
+*.wav

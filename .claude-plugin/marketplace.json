@@ -1,0 +1,17 @@
+{
+  "name": "dimchansky-skills",
+  "description": "Claude Code plugins and skills by Dmitrij Koniajev",
+  "owner": {
+    "name": "Dmitrij Koniajev",
+    "url": "https://github.com/dimchansky"
+  },
+  "plugins": [
+    {
+      "name": "youtube-transcript",
+      "source": "./plugins/youtube-transcript",
+      "description": "Clean, proofread Markdown transcripts of YouTube videos and local audio/video files, transcribed locally with Parakeet in Spokenly. macOS only.",
+      "category": "productivity",
+      "tags": ["youtube", "transcript", "speech-to-text", "macos"]
+    }
+  ]
+}

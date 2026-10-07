@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    name: Unit tests (Python ${{ matrix.python }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 3.9 is what macOS ships with the Xcode Command Line Tools (/usr/bin/python3).
+        python: ["3.9", "3.13"]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Compile scripts
+        run: python -m py_compile plugins/*/skills/*/scripts/*.py
+      - name: Run tests
+        run: python -m unittest discover -s tests -v
+
+  validate:
+    name: Validate marketplace and plugins
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+      - name: Validate marketplace
+        run: claude plugin validate .
+      - name: Validate plugins
+        run: |
+          for plugin in plugins/*/; do
+            claude plugin validate "$plugin"
+          done
