@@ -39,7 +39,7 @@ python3 ${CLAUDE_SKILL_DIR}/scripts/yt_transcript.py prepare "<youtube-url-or-lo
 
 In **one message**, spawn one Agent call per chunk so they run concurrently. Skip chunks marked `"already_edited": true`, which a previous run already finished.
 
-- `subagent_type`: `"youtube-transcript:transcript-editor"`, the editor that ships with this plugin. It can only Read and Write, runs on Sonnet, and edits a ~1,500-word chunk in about 5 minutes. All chunks run at once, so editing takes about that long for any video length. If that type isn't in your agent list, use `"general-purpose"` with `model: "sonnet"`. The task file carries every instruction, so the result is the same; that agent just has more tools than it needs.
+- `subagent_type`: `"youtube-transcript:transcript-editor"`, the editor that ships with this plugin. It can only Read and Write, runs on Sonnet at medium effort, and edits a chunk in well under a minute (22 s for ~1,000 words in tests). All chunks run at once, so editing takes about that long for any video length. If that type isn't in your agent list, for example right after the plugin was installed (`/reload-plugins` fixes that), use `"general-purpose"` with `model: "sonnet"`. The task file carries every instruction, so the result is the same, but that agent inherits your session's thinking and effort settings and was ~9× slower in tests (3–4 minutes per chunk).
 - `description`: `"Edit transcript chunk N/M"`
 - `prompt`, with only the path filled in:
 

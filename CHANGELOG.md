@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## youtube-transcript
 
+### [1.0.1] - 2026-10-07
+
+#### Changed
+
+- Documented the measured editing speed. The bundled `transcript-editor` edits a ~1,000-word chunk in ~22 s. A `general-purpose` fallback takes 3–4 minutes (~9× slower, with equal quality) because it inherits the session's thinking and effort settings. SKILL.md and the troubleshooting guide now say to run `/reload-plugins` when the bundled editor is missing right after installation.
+
 ### [1.0.0] - 2026-10-07
 
 #### Added

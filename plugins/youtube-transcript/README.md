@@ -31,7 +31,7 @@ URL ─ yt-dlp ─▶ audio.flac ─ Spokenly · Parakeet (local) ─▶ words +
 
 The main Claude session never reads the transcript itself. That keeps long videos fast and cheap.
 
-**Timing** on an Apple Silicon Mac, for a 23-minute video: `prepare` takes ~20 s. Editing takes ~5 minutes; the chunks run in parallel, so longer videos take about as long. `finalize` takes under a second.
+**Timing** on an Apple Silicon Mac, for a 23-minute video: `prepare` takes ~20 s. Editing takes well under a minute: the bundled editor needed 22 s for a ~1,000-word chunk, and all chunks run in parallel, so longer videos take about as long. `finalize` takes under a second. If Claude falls back to a general-purpose subagent, for example right after installing before `/reload-plugins`, editing takes 3–4 minutes instead, because that agent inherits your session's thinking and effort settings.
 
 **Model choice.** On the same chunks, Sonnet and Opus produced near-identical edits: 3–5 differing spots per ~1,500 words, with the same QA scores. The editor therefore runs on Sonnet.
 
