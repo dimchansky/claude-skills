@@ -5,6 +5,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## youtube-transcript
 
+### [1.0.3] - 2026-10-08
+
+#### Fixed
+
+- Platform documentation. Spokenly is not macOS-only: Windows and Linux versions also offer local Parakeet/Whisper models and file transcription. What is macOS-only is the CLI and local server the plugin drives, which are documented only for Spokenly's macOS direct-download build. The README now has a component-by-OS matrix and lists what a Windows/Linux port would need. `doctor` and `prepare` messages are corrected.
+- Spokenly can now be installed with `brew install --cask spokenly`, which installs the direct-download build. The README, `doctor` and the troubleshooting guide say so.
+
 ### [1.0.2] - 2026-10-07
 
 #### Fixed

@@ -26,7 +26,7 @@ Updating tools changes the user's system, so ask before running `brew upgrade` o
 
 | Symptom | Fix |
 |---|---|
-| `Spokenly.app is not installed` | Install it from https://spokenly.app. It must be version 2.29+ and the direct-download build: the App Store build has no local server or CLI. |
+| `Spokenly.app is not installed` | `brew install --cask spokenly`, or download it from https://spokenly.app. It must be version 2.29+ and the direct-download build: the App Store build has no local server or CLI. The Windows and Linux versions of Spokenly have no documented CLI either, which is why the skill is macOS-only. |
 | `nothing listens on localhost:51089` | Open Spokenly.app manually and make sure it has finished starting (and isn't stuck in onboarding), then retry. |
 | `Spokenly CLI not found` | The app writes `~/Library/Application Support/Spokenly/spokenly` when it starts. Update Spokenly and launch it once. |
 | Warning: model is not Parakeet | The file-transcription model in Spokenly's settings isn't Parakeet. Tell the user. Parakeet TDT 0.6B v3 is the intended model for the 25 European languages it supports. |

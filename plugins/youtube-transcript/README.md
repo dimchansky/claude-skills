@@ -4,7 +4,7 @@ A Claude Code plugin that turns a YouTube video (or anything else [yt-dlp](https
 
 Speech recognition runs **locally** on your Mac, in [Spokenly](https://spokenly.app) with NVIDIA's Parakeet TDT 0.6B v3 model. Claude then proofreads the text with several editors working in parallel and checks that nothing was shortened, rewritten or translated.
 
-> **macOS only.** Spokenly is a macOS app, so the plugin doesn't run on Linux or Windows. See [Platform support](#platform-support).
+> **macOS only for now.** Spokenly also exists for Windows and Linux, but the command-line interface the plugin uses to drive it is documented only for Spokenly's macOS direct-download build. See [Platform support](#platform-support).
 
 ## What you get
 
@@ -41,7 +41,7 @@ The main Claude session never reads the transcript itself. That keeps long video
 |---|---|---|
 | macOS, Apple Silicon recommended | — | — |
 | [Claude Code](https://code.claude.com) | with plugin support | — |
-| [Spokenly](https://spokenly.app) | 2.29+, **direct-download build** (the App Store build has no local server or CLI) | from the website |
+| [Spokenly](https://spokenly.app) | 2.29+, **direct-download build** (the App Store build has no local server or CLI) | `brew install --cask spokenly`, or download it from the website |
 | Parakeet TDT 0.6B v3 selected in Spokenly as the file-transcription model | — | Spokenly settings |
 | yt-dlp, ffmpeg, deno (yt-dlp's JavaScript runtime for YouTube) | yt-dlp ≤ 60 days old | `brew install yt-dlp ffmpeg deno` |
 | Python | 3.9+ (the `python3` that comes with Xcode Command Line Tools is enough) | `xcode-select --install` |
@@ -123,13 +123,23 @@ Results go to `./youtube-transcripts/` in the current directory unless you name 
 
 ## Platform support
 
-| Platform | Status |
-|---|---|
-| macOS on Apple Silicon | Supported and tested |
-| macOS on Intel | Should work if Spokenly runs Parakeet there; not tested |
-| Linux, Windows | **Not supported, not tested.** Transcription depends on Spokenly, a macOS app; the script refuses to run elsewhere, and `doctor` says so |
+| Component | macOS | Windows | Linux |
+|---|---|---|---|
+| Claude Code | ✓ | ✓ (native or WSL) | ✓ |
+| yt-dlp, ffmpeg, deno, Python 3.9+ | ✓ | ✓ | ✓ |
+| Spokenly with local Parakeet/Whisper models and file transcription | ✓ | ✓ (Windows 10/11, x64) | ✓ (x86_64 only) |
+| Spokenly CLI and local server (`spokenly transcribe`, `localhost:51089`), which the plugin drives | ✓ (direct-download build) | not documented | not documented |
+| **This plugin** | **✓ tested on Apple Silicon**; Intel should work (Spokenly is a Universal app), not tested | ✗ not yet | ✗ not yet |
 
-The rest of the pipeline (yt-dlp, chunking, editing, QA) is portable Python. A Linux port would need a different local speech recognizer, such as Parakeet via NVIDIA NeMo or faster-whisper, behind the same `transcribe()` function.
+Everything except the automated transcription step already runs on all three systems. Spokenly itself transcribes files with the same Parakeet model on Windows and Linux, but only from its window. As of October 2026, its documentation describes the CLI and the local server only for the macOS direct-download build, so there is nothing for a script to call on those systems.
+
+A port needs two things:
+
+1. **A scriptable speech recognizer** behind the script's `transcribe()` function. That could be Spokenly's CLI if it ships for those systems, or another local engine: candidates are Parakeet through NVIDIA NeMo or an ONNX runtime such as sherpa-onnx, or Whisper through whisper.cpp or faster-whisper.
+2. **Small script changes:**
+   - The script launches Spokenly with the macOS `open` command.
+   - `doctor` reads the app version and the selected model from macOS-specific places.
+   - The skill calls `python3`, which on Windows is usually `python` or `py`.
 
 ## Privacy
 

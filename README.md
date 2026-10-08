@@ -18,7 +18,7 @@ claude plugin marketplace add dimchansky/claude-skills
 claude plugin install youtube-transcript@dimchansky-skills
 ```
 
-**2. Check the requirements** (macOS, [Spokenly](https://spokenly.app) with the Parakeet model, `brew install yt-dlp ffmpeg deno`). Start Claude Code and ask:
+**2. Check the requirements**: macOS, [Spokenly](https://spokenly.app) with the Parakeet model (`brew install --cask spokenly`), and `brew install yt-dlp ffmpeg deno`. Start Claude Code and ask:
 
 ```
 > run the youtube-transcript doctor

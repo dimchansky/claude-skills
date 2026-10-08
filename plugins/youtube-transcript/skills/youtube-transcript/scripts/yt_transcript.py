@@ -9,7 +9,8 @@ Pipeline: yt-dlp (best audio -> FLAC) -> Spokenly CLI (local NVIDIA Parakeet, wo
   yt_transcript.py finalize WORKDIR
 
 `doctor` checks the environment. `prepare` and `finalize` print a compact JSON summary to stdout;
-progress goes to stderr. Standard library only, Python 3.9+, macOS only.
+progress goes to stderr. Standard library only, Python 3.9+. macOS only: Spokenly's CLI and local server
+exist only in its macOS direct-download build (Spokenly for Windows/Linux has no documented CLI).
 External tools: yt-dlp, ffmpeg, deno, Spokenly.app 2.29+ (its bundled CLI).
 """
 from __future__ import annotations
@@ -178,8 +179,8 @@ def ensure_spokenly() -> None:
     if not spokenly_listening():
         log("Spokenly is not running, launching it in the background")
         if subprocess.run(["open", "-g", "-a", "Spokenly"], capture_output=True).returncode != 0:
-            raise PipelineError("Spokenly.app is not installed. Install it from https://spokenly.app "
-                                "(version 2.29+, the direct-download build, not the App Store one).")
+            raise PipelineError("Spokenly.app is not installed: brew install --cask spokenly (or download it from "
+                                "https://spokenly.app; version 2.29+, the direct-download build, not the App Store one).")
         for _ in range(60):
             if spokenly_listening():
                 break
@@ -439,7 +440,8 @@ def cmd_doctor(_args: argparse.Namespace) -> int:
 
     if sys.platform != "darwin":
         check("fail", f"macOS required, this is {platform.system()}",
-              "Transcription runs in Spokenly, a macOS app. Linux and Windows are not supported.")
+              "Spokenly runs on Windows and Linux too, but the CLI and local server this skill uses are "
+              "documented only for its macOS direct-download build (see the plugin README, Platform support).")
     else:
         arch = platform.machine()
         check("ok" if arch == "arm64" else "warn", f"macOS {platform.mac_ver()[0]} on {arch}",
@@ -469,7 +471,8 @@ def cmd_doctor(_args: argparse.Namespace) -> int:
 
     app = find_spokenly_app() if sys.platform == "darwin" else None
     if not app:
-        check("fail", "Spokenly.app not found", "Install the direct-download build from https://spokenly.app")
+        check("fail", "Spokenly.app not found",
+              "brew install --cask spokenly (or the direct-download build from https://spokenly.app)")
     else:
         try:
             app_version = plistlib.loads((app / "Contents" / "Info.plist").read_bytes()).get("CFBundleShortVersionString", "0")
@@ -478,7 +481,7 @@ def cmd_doctor(_args: argparse.Namespace) -> int:
         parts = tuple(int(x) for x in re.findall(r"\d+", app_version)[:2])
         if (app / "Contents" / "_MASReceipt").exists():
             check("fail", f"Spokenly {app_version} is the App Store build, which has no local server or CLI",
-                  "Install the direct-download build from https://spokenly.app")
+                  "brew install --cask spokenly (or the direct-download build from https://spokenly.app)")
         elif parts < MIN_SPOKENLY_VERSION:
             check("fail", f"Spokenly {app_version} is too old (needs 2.29+ for its CLI)", "Update Spokenly")
         else:
@@ -519,7 +522,8 @@ def cmd_doctor(_args: argparse.Namespace) -> int:
 
 def cmd_prepare(args: argparse.Namespace) -> dict:
     if sys.platform != "darwin":
-        raise PipelineError("This skill needs macOS: transcription runs in Spokenly, a macOS app.")
+        raise PipelineError("This skill needs macOS: it drives Spokenly through the CLI and local server that only "
+                            "Spokenly's macOS direct-download build provides.")
     extra = shlex.split(args.ytdlp_args or "")
     if args.cookies_from_browser:
         extra += ["--cookies-from-browser", args.cookies_from_browser]
